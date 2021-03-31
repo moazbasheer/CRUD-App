@@ -6,7 +6,7 @@
     $cleardb_db = substr($cleardb_url["path"],1);
     $active_group = 'default';
     $query_builder = TRUE;
-    var_dump($cleardb_url);
+    // var_dump($cleardb_url);
     $username='root';
     $pass='123456';
     $pdo = new PDO("mysql:host=$cleardb_server;dbname=$cleardb_db",$cleardb_username,$cleardb_password);
