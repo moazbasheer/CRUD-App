@@ -9,5 +9,5 @@
     var_dump($cleardb_url);
     $username='root';
     $pass='123456';
-    $pdo = new PDO('mysql:host=localhost;dbname=misc',$username,$pass);
+    $pdo = new PDO("mysql:host=$cleardb_server;dbname=$cleardb_db",$cleardb_username,$cleardb_password);
 ?>
