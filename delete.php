@@ -51,26 +51,26 @@
 <body>
 <div class="container">
 <h1>Deleteing Profile</h1>
-<p style="color:red">
-    <?php
-	if(isset($_SESSION['error'])){
-	    echo $_SESSION['error'];
-	    unset($_SESSION['error']);
-	}
-    ?>
-</p>
-<form method="post">
-<p>First Name:
-<?php echo htmlentities($row['first_name']); ?></p>
-<p>Last Name:
-<?php echo htmlentities($row['last_name']); ?></p>
-<input type="hidden" name="profile_id"
-value="4696"
-/>
-<input type="submit" name="delete" value="Delete">
-<input type="submit" name="cancel" value="Cancel">
-</p>
-</form>
+    <p style="color:red">
+        <?php
+        if(isset($_SESSION['error'])){
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+        ?>
+    </p>
+    <form method="post">
+        <p>First Name:
+        <?php echo htmlentities($row['first_name']); ?></p>
+        <p>Last Name:
+        <?php echo htmlentities($row['last_name']); ?></p>
+        <input type="hidden" name="profile_id"
+        value="4696"
+        />
+        <input type="submit" name="delete" value="Delete">
+        <input type="submit" name="cancel" value="Cancel">
+        </p>
+    </form>
 </div>
 </body>
 </html>

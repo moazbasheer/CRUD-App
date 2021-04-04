@@ -2,7 +2,7 @@
     session_start();
     require_once 'pdo.php';
     ini_set('display_errors', 1);
-    
+
     function validatePos() {
     	for($i=1; $i<=9; $i++) {
     	    if ( ! isset($_POST['year'.$i]) ) continue;
@@ -32,8 +32,10 @@
     }else if(is_string(validatePos())){
 	$_SESSION['error'] = validatePos();
 	header('Location:add.php');
-    }else if($_POST['first_name'] != "" && $_POST['last_name'] != "" &&
-	$_POST['summary'] != "" && $_POST['email'] != "" && $_POST['headline'] != ""){
+    }else if(!empty($_POST['first_name']) &&
+	!empty($_POST['last_name']) &&
+	!empty($_POST['summary']) && 
+	!empty($_POST['email']) && $_POST['headline'] != ""){
 	$stmt = $pdo->prepare('insert into Profile(user_id,first_name,last_name,email,
 		headline,summary) values(:ui, :fn, :ln, :em, :hdl, :sm)');
     	$stmt->execute(array(
@@ -89,27 +91,27 @@
     }
 ?>
 </p>
-<form method="post">
-<p>First Name:
-<input type="text" name="first_name" size="60"/></p>
-<p>Last Name:
-<input type="text" name="last_name" size="60"/></p>
-<p>Email:
-<input type="text" name="email" size="30"/></p>
-<p>Headline:<br/>
-<input type="text" name="headline" size="80"/></p>
-<p>Summary:<br/>
-<textarea name="summary" rows="8" cols="80"></textarea>
-<p>
-Position: <input type="submit" id="addPos" value="+">
-<div id="position_fields">
-</div>
-</p>
-<p>
-<input type="submit" value="Add">
-<input type="submit" name="cancel" value="Cancel">
-</p>
-</form>
+    <form method="post">
+        <p>First Name:
+	<input type="text" name="first_name" size="60"/></p>
+	<p>Last Name:
+	<input type="text" name="last_name" size="60"/></p>
+	<p>Email:
+	<input type="text" name="email" size="30"/></p>
+	<p>Headline:<br/>
+	<input type="text" name="headline" size="80"/></p>
+	<p>Summary:<br/>
+	<textarea name="summary" rows="8" cols="80"></textarea>
+	<p>Position:
+	<input type="submit" id="addPos" value="+">
+	<div id="position_fields">
+	</div>
+    	</p>
+    	<p>
+	    <input type="submit" value="Add">
+   	    <input type="submit" name="cancel" value="Cancel">
+   	 </p>
+    </form>
 </div>
 <script>
 countPos = 0;

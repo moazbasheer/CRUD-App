@@ -10,13 +10,16 @@
             header('Location:edit.php');
             return;
         }
-    else if($_POST['first_name'] != "" && $_POST['last_name'] != "" &&
-        $_POST['summary'] != "" && $_POST['email'] != "" && $_POST['headline'] != ""){
+    else if(!empty($_POST['first_name']) && 
+        !empty($_POST['last_name']) &&
+        !empty($_POST['summary']) && 
+        !empty($_POST['email']) && 
+        !empty($_POST['headline'])){
+        
         $stmt = $pdo->prepare('update Profile
                 set first_name = :fn, last_name = :ln, email = :em,
                         headline= :hdl, summary = :sm
                 where profile_id = :pi');
-	echo 'hello';
         $stmt->execute(array(
                 ':pi' => $_GET['profile_id'],
                 ':fn' => $_POST['first_name'],
@@ -25,15 +28,15 @@
                 ':hdl' => $_POST['headline'],
                 ':sm' => $_POST['summary'])
         );
-	$stmt = $pdo->prepare('DELETE FROM Position WHERE profile_id=:pid');
+        $stmt = $pdo->prepare('DELETE FROM Position WHERE profile_id=:pid');
         $stmt->execute(array( ':pid' => $_GET['profile_id']));
-	$rank = 1;
+        $rank = 1;
         for($i=1; $i<=9; $i++){
             if ( ! isset($_POST['year'.$i]) ) continue;
             if ( ! isset($_POST['desc'.$i]) ) continue;
             $year = $_POST['year'.$i];
             $desc = $_POST['desc'.$i];
-	    $profile_id = $_GET['profile_id'];
+            $profile_id = $_GET['profile_id'];
             $stmt = $pdo->prepare('INSERT INTO Position (profile_id, rank_, year, description) VALUES ( :pid, :rank, :year, :desc)');
             $stmt->execute(array(
                 ':pid' => $profile_id,
@@ -78,62 +81,62 @@
 <?php include_once 'bootstrap.php' ?>
 </head>
 <body>
-<div class="container">
-<h1>Editing Profile for UMSI</h1>
-<p style="color:red">
+    <div class="container">
+    <h1>Editing Profile for UMSI</h1>
+    <p style="color:red">
+        <?php
+            if(isset($_SESSION['error'])){
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
+            }
+        ?>
+    </p>
+    <form method="post">
+    <p>First Name:
+    <input type="text" name="first_name" size="60"
+    value="<?php echo htmlentities($row['first_name']); ?>"
+    /></p>
+    <p>Last Name:
+    <input type="text" name="last_name" size="60"
+    value="<?php echo htmlentities($row['last_name']); ?>"
+    /></p>
+    <p>Email:
+    <input type="text" name="email" size="30"
+    value="<?php echo htmlentities($row['email']); ?>"
+    /></p>
+    <p>Headline:<br/>
+    <input type="text" name="headline" size="80"
+    value="<?php echo htmlentities($row['headline']); ?>"
+    /></p>
+    <p>Summary:<br/>
+    <textarea name="summary" rows="8" cols="80">
+    <?php echo htmlentities($row['summary']); ?></textarea>
+    <p>
+    <input type="hidden" name="profile_id"
+    value="4696"
+    />
+    Position: <input type="submit" id="addPos" value="+">
+    <div id="position_fields">
     <?php
-        if(isset($_SESSION['error'])){
-            echo $_SESSION['error'];
-            unset($_SESSION['error']);
+        $stmt = $pdo->prepare("select * from Position where profile_id = :pi");
+        $stmt->execute(array(':pi' => $_GET['profile_id']));
+        $cnt = 0;
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        echo "<div id='position" . $row['rank_'] . "'> ";
+            echo "<p>Year: <input type='text' name='year" . $row['rank_'] . "' value='". htmlentities($row['year']) . "' />";
+            echo "<input type='button' value='-' onclick=\"$('#position" . $row['rank_'] ."').remove();return false;\"></p>";
+            echo "<textarea name='desc". $row['rank_'] ."' rows='8' cols='80' >". htmlentities($row['description']) ."</textarea>";
+            echo "</div>";
+        $cnt = $row['rank_'];
         }
     ?>
-</p>
-<form method="post">
-<p>First Name:
-<input type="text" name="first_name" size="60"
-value="<?php echo htmlentities($row['first_name']); ?>"
-/></p>
-<p>Last Name:
-<input type="text" name="last_name" size="60"
-value="<?php echo htmlentities($row['last_name']); ?>"
-/></p>
-<p>Email:
-<input type="text" name="email" size="30"
-value="<?php echo htmlentities($row['email']); ?>"
-/></p>
-<p>Headline:<br/>
-<input type="text" name="headline" size="80"
-value="<?php echo htmlentities($row['headline']); ?>"
-/></p>
-<p>Summary:<br/>
-<textarea name="summary" rows="8" cols="80">
-<?php echo htmlentities($row['summary']); ?></textarea>
-<p>
-<input type="hidden" name="profile_id"
-value="4696"
-/>
-Position: <input type="submit" id="addPos" value="+">
-<div id="position_fields">
-<?php
-    $stmt = $pdo->prepare("select * from Position where profile_id = :pi");
-    $stmt->execute(array(':pi' => $_GET['profile_id']));
-    $cnt = 0;
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-	echo "<div id='position" . $row['rank_'] . "'> ";
-        echo "<p>Year: <input type='text' name='year" . $row['rank_'] . "' value='". htmlentities($row['year']) . "' />";
-        echo "<input type='button' value='-' onclick=\"$('#position" . $row['rank_'] ."').remove();return false;\"></p>";
-        echo "<textarea name='desc". $row['rank_'] ."' rows='8' cols='80' >". htmlentities($row['description']) ."</textarea>";
-        echo "</div>";
-	$cnt = $row['rank_'];
-    }
-?>
-</div>
-</p>
-<p>
-<input type="submit" name="save" value="Save">
-<input type="submit" name="cancel" value="Cancel">
-</p>
-</form>
+    </div>
+    </p>
+    <p>
+    <input type="submit" name="save" value="Save">
+    <input type="submit" name="cancel" value="Cancel">
+    </p>
+    </form>
 </div>
 <script>
 countPos = <?php echo $cnt; ?>;
