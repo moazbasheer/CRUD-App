@@ -70,9 +70,7 @@ For a password hint, view source and find an account and password hint
 in the HTML comments.
 <!-- Hint: 
 The account is umsi@umich.edu
-The password is the three character name of the 
-programming language used in this class (all lower case) 
-followed by 123. -->
+The password is php123 -->
 </p>
 <script>
 function doValidate() {
